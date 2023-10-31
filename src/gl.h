@@ -26,7 +26,6 @@ const int SCREEN_HEIGHT = 720;
 Color currentColor = {255, 255, 255, 255}; // Initially set to white
 Color clearColor = {0, 0, 0, 255}; // Initially set to black
 std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
-std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbufferToPrint;
 
 
 bool init() {
@@ -66,6 +65,8 @@ void clear() {
     for (auto &row : zbuffer) {
         std::fill(row.begin(), row.end(), 99999.0f);
     }
+
+    //
 }
 
 // Function to set a specific pixel in the framebuffer to the currentColor
