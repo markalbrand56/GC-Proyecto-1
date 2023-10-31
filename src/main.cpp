@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-Camera camera;
+Camera camera = setupInitialCamera();
 std::vector<Model> models;
 std::string planet;
 bool hasMoon = false;
@@ -162,13 +162,13 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // Sol
+    // Planet
     std::vector<glm::vec3> planetVertices;
     std::vector<Face> planetFaces;
     std::vector<glm::vec3> planetNormals;
     std::vector<glm::vec3> planetTexCoords;
 
-    // Uranus
+    // Moon
     std::vector<glm::vec3> moonVertices;
     std::vector<Face> moonFaces;
     std::vector<glm::vec3> moonNormals;
@@ -186,17 +186,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    // Process the OBJ file into rotationAnglePlanet VBO
     std::vector<glm::vec3> planetVBO = setupVertexFromObject(planetFaces, planetVertices, planetNormals, planetTexCoords);
     std::vector<glm::vec3> moonVBO = setupVertexFromObject(moonFaces, moonVertices, moonNormals, moonTexCoords);
 
-    Uint32 frameStart, frameTime;
-    float a = 45.0f;
-    float b = 0.0f;
+    Uint32 frameStart, frameTime; // For calculating the frames per second
 
-    // Camera
-    camera.cameraPosition = glm::vec3(0.0f, 0.0f, 2.5f);
-    camera.targetPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-    camera.upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+    float rotationAnglePlanet = 0.0f; // Angle for the rotation of the planet
+    float rotationAngleMoon = 0.0f; // Angle for the rotation of the moon
 
     // Create Sun planetUniform
     Uniforms planetUniform{};
@@ -261,11 +258,11 @@ int main(int argc, char** argv) {
             }
         }
 
-        a += (speed/planetSize);
-        b += (speed/planetSize) * 1.5f;
+        rotationAnglePlanet += (speed / planetSize);
+        rotationAngleMoon += (speed / planetSize) * 1.5f;
 
         // Sun
-        planetUniform.model = createModelMatrix(translationVector, scaleFactor * planetSize, rotationAxis, a);
+        planetUniform.model = createModelMatrix(translationVector, scaleFactor * planetSize, rotationAxis, rotationAnglePlanet);
         planetModel.modelMatrix = planetUniform.model;
 
         // Moon
@@ -276,7 +273,7 @@ int main(int argc, char** argv) {
                 0.0f,
                 distanceToPlanet * sin(glm::radians(moonOrbitAngle))
         );
-        moonUniform.model = createModelMatrix(translationVectorMoon, scaleFactorMoon, rotationAxisMoon, b);
+        moonUniform.model = createModelMatrix(translationVectorMoon, scaleFactorMoon, rotationAxisMoon, rotationAngleMoon);
         moonModel.modelMatrix = moonUniform.model;
 
         models.push_back(planetModel);
