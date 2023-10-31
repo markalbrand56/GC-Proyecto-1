@@ -23,7 +23,6 @@ SDL_Renderer* renderer = nullptr;
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
-Color currentColor = {255, 255, 255, 255}; // Initially set to white
 Color clearColor = {0, 0, 0, 255}; // Initially set to black
 std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
 
@@ -59,32 +58,20 @@ bool init() {
     return true;
 }
 
-void setColor(const Color& color) {
-    currentColor = color;
-}
-
 float ox = 1200.0f;
 float oy = 3000.0f;
-float zoom = 1000.0f;
+
 // Function to clear the framebuffer with the clearColor
 void clear() {
     SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     SDL_RenderClear(renderer);
 
-    // reset the zbuffer
+    // Clean the zbuffer
     for (auto &row : zbuffer) {
         std::fill(row.begin(), row.end(), 99999.0f);
     }
 
-    // despues de limpiar el zbuffer, quiero simular estrellas
-    // en el fondo, para eso voy a usar el ruido
-
-    // voy a generar un numero aleatorio entre 0 y 1
-    // si el numero es menor a 0.0001, voy a dibujar una estrella
-    // en una posicion aleatoria de la pantalla
-    // voy a usar el ruido para generar la posicion aleatoria
-    // y voy a usar el ruido para generar el color de la estrella
-
+    // Generate stars
     int numStars = 2500;
     FastNoiseLite noise;
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
