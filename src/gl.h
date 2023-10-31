@@ -63,7 +63,9 @@ void setColor(const Color& color) {
     currentColor = color;
 }
 
-
+float ox = 1200.0f;
+float oy = 3000.0f;
+float zoom = 1000.0f;
 // Function to clear the framebuffer with the clearColor
 void clear() {
     SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
@@ -83,50 +85,34 @@ void clear() {
     // voy a usar el ruido para generar la posicion aleatoria
     // y voy a usar el ruido para generar el color de la estrella
 
-    int numStars = 1000;
+    int numStars = 2500;
     FastNoiseLite noise;
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 
-    float ox = 1200.0f;
-    float oy = 3000.0f;
-    float zoom = 200.0f;
+    ox += 0.001f;
+    oy += 0.001f;
 
-    for (int i = 0; i < numStars; i++) {
-        float random = (float)rand() / RAND_MAX;
-        if (random != 0.0001f) {
-            // necesito valores X y Y de 0 a SCREEN_WIDTH y SCREEN_HEIGHT aleatorios
-            // voy a usar el ruido para generar esos valores
-            float x = noise.GetNoise((float)i + ox, oy) * SCREEN_WIDTH;
-            float y = noise.GetNoise((float)i + oy, ox) * SCREEN_HEIGHT;
-            float z = noise.GetNoise((float)i + ox, oy) * 100.0f;
 
-            // voy a generar un color aleatorio para la estrella
-            float r = noise.GetNoise((float)i + ox, oy) * 255.0f;
-            float g = noise.GetNoise((float)i + oy, ox) * 255.0f;
-            float b = noise.GetNoise((float)i + ox, oy) * 255.0f;
+    for (int i = 0; i < numStars; i += 5) {
+        float x = noise.GetNoise((float)i + ox, oy) * SCREEN_WIDTH;
+        float y = noise.GetNoise((float)i + oy, ox) * SCREEN_HEIGHT;
+        float z = noise.GetNoise((float)i + ox, oy) * 100.0f;
 
-            x = std::abs(x);
-            y = std::abs(y);
-            z = std::abs(z);
+        x = std::abs(x);
+        y = std::abs(y);
+        z = std::abs(z);
 
-            r = std::abs(r);
-            g = std::abs(g);
-            b = std::abs(b);
+//        std::cout << x << ", " << y << ", " << z << std::endl;
 
-//            std::cout << x << ", " << y << ", " << z << std::endl;
-//            std::cout << r << ", " << g << ", " << b << std::endl;
+        float size = noise.GetNoise((float)i + ox, oy) * 5.0f;
 
-            // voy a generar un punto de tamaño aleatorio para la estrella
-            float size = noise.GetNoise((float)i + ox, oy) * 5.0f;
+        Fragment f = {
+            {x, y, z},
+            Color{255, 255, 255},
+            size
+        };
 
-            Fragment f = {
-                {x, y, z},
-                Color{255, 255, 255},
-                size
-            };
-
-            point(f);
-        }
+        point(f);
     }
 }
 
