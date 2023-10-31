@@ -10,19 +10,18 @@
 
 Camera camera;
 std::vector<Model> models;
-std::string planet = "";
+std::string planet;
 bool hasMoon = false;
 float planetSize = 1.0f;
 
 using namespace std;
 void render() {
-    for (int i = 0; i < models.size(); i++) {
-        Model model = models[i];
+    for (auto model : models) {
         Uniforms uniform = model.uniforms;
         uniform.model = model.modelMatrix;
 
         // 1. Vertex Shader
-        // vertex -> trasnformedVertices
+        // vertex -> transformedVertices
         std::vector<Vertex> transformedVertices;
 
         for (int i = 0; i < model.vertices.size(); i+=3) {
@@ -30,7 +29,7 @@ void render() {
             glm::vec3 n = model.vertices[i+1];
             glm::vec3 t = model.vertices[i+2];
 
-            Vertex vertex = Vertex{v, n, t};
+            auto vertex = Vertex{v, n, t};
 
             Vertex transformedVertex = vertexShader(vertex, uniform);
             transformedVertices.push_back(transformedVertex);
@@ -191,7 +190,6 @@ int main(int argc, char** argv) {
     std::vector<glm::vec3> moonVBO = setupVertexFromObject(moonFaces, moonVertices, moonNormals, moonTexCoords);
 
     Uint32 frameStart, frameTime;
-    std::string title = "FPS: ";
     float a = 45.0f;
     float b = 0.0f;
 
@@ -201,7 +199,7 @@ int main(int argc, char** argv) {
     camera.upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 
     // Create Sun planetUniform
-    Uniforms planetUniform;
+    Uniforms planetUniform{};
 
     glm::vec3 translationVector(0.0f, 0.0f, 0.0f);
     glm::vec3 rotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis
@@ -212,7 +210,7 @@ int main(int argc, char** argv) {
     planetUniform.viewport = createViewportMatrix();
 
     // Create Uranus planetUniform
-    Uniforms moonUniform;
+    Uniforms moonUniform{};
 
     glm::vec3 rotationAxisMoon(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis
     glm::vec3 scaleFactorMoon(0.27f, 0.27f, 0.27f);
