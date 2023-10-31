@@ -38,3 +38,21 @@ glm::mat4 createViewportMatrix() {
 
     return viewport;
 }
+
+Uniforms planetBaseUniform(Camera camera) {
+    Uniforms uniforms{};
+    uniforms.view = createViewMatrix(camera);
+    uniforms.projection = createProjectionMatrix();
+    uniforms.viewport = createViewportMatrix();
+
+    return uniforms;
+}
+
+Uniforms moonBaseUniform(Camera camera) {
+    Uniforms uniforms{};
+    uniforms.view = createViewMatrix(camera);
+    uniforms.projection = createProjectionMatrix();
+    uniforms.viewport = createViewportMatrix();
+
+    return uniforms;
+}

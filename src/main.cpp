@@ -195,31 +195,22 @@ int main(int argc, char** argv) {
     float rotationAnglePlanet = 0.0f; // Angle for the rotation of the planet
     float rotationAngleMoon = 0.0f; // Angle for the rotation of the moon
 
-    // Create Sun planetUniform
-    Uniforms planetUniform{};
+    // Create Uniform for first planet
+    Uniforms planetUniform1 = planetBaseUniform(camera);
 
-    glm::vec3 translationVector(0.0f, 0.0f, 0.0f);
-    glm::vec3 rotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis
-    glm::vec3 scaleFactor(1.0f, 1.0f, 1.0f);
+    glm::vec3 modelTranslationVector(0.0f, 0.0f, 0.0f);  // Move the model to the center of the world
+    glm::vec3 modelRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 planetScaleFactor(1.0f, 1.0f, 1.0f);  // Scale the model to 1/10th of its original size
 
-    planetUniform.view = createViewMatrix(camera);
-    planetUniform.projection = createProjectionMatrix();
-    planetUniform.viewport = createViewportMatrix();
+    // Create Uniform for moon
+    Uniforms moonUniform = moonBaseUniform(camera);
 
-    // Create Uranus planetUniform
-    Uniforms moonUniform{};
-
-    glm::vec3 rotationAxisMoon(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis
-    glm::vec3 scaleFactorMoon(0.27f, 0.27f, 0.27f);
-
-    moonUniform.view = createViewMatrix(camera);
-    moonUniform.projection = createProjectionMatrix();
-    moonUniform.viewport = createViewportMatrix();
+    glm::vec3 moonScaleFactor(0.27f, 0.27f, 0.27f);
 
     // Create model
     Model planetModel;
     planetModel.vertices = planetVBO;
-    planetModel.uniforms = planetUniform;
+    planetModel.uniforms = planetUniform1;
     planetModel.shader = Shader::Earth;
     hasMoon = true;
 
@@ -261,9 +252,9 @@ int main(int argc, char** argv) {
         rotationAnglePlanet += (speed / planetSize);
         rotationAngleMoon += (speed / planetSize) * 1.5f;
 
-        // Sun
-        planetUniform.model = createModelMatrix(translationVector, scaleFactor * planetSize, rotationAxis, rotationAnglePlanet);
-        planetModel.modelMatrix = planetUniform.model;
+        // First planet
+        planetUniform1.model = createModelMatrix(modelTranslationVector, planetScaleFactor * planetSize, modelRotationAxis, rotationAnglePlanet);
+        planetModel.modelMatrix = planetUniform1.model;
 
         // Moon
         // move the moon around the planet on the x and y axis
@@ -273,7 +264,7 @@ int main(int argc, char** argv) {
                 0.0f,
                 distanceToPlanet * sin(glm::radians(moonOrbitAngle))
         );
-        moonUniform.model = createModelMatrix(translationVectorMoon, scaleFactorMoon, rotationAxisMoon, rotationAngleMoon);
+        moonUniform.model = createModelMatrix(translationVectorMoon, moonScaleFactor, modelRotationAxis, rotationAngleMoon);
         moonModel.modelMatrix = moonUniform.model;
 
         models.push_back(planetModel);
