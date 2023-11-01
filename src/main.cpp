@@ -122,43 +122,7 @@ std::vector<glm::vec3> setupVertexFromObject(const std::vector<Face>& faces, con
 
     return vertexBufferObject;
 }
-/*
-Shader getNextPlanetTexture(Shader currentTexture) {
-    // Implementa la lógica para cambiar a la siguiente textura
-    switch (currentTexture) {
-        case Shader::Earth:
-            planet = "Sun";
-            hasMoon = false;
-            planetSize = 1.6f;
-            return Shader::Sun;
-        case Shader::Sun:
-            planet = "Jupiter";
-            hasMoon = false;
-            planetSize = 1.3f;
-            return Shader::Jupiter;
-        case Shader::Jupiter:
-            planet = "Uranus";
-            hasMoon = false;
-            planetSize = 1.15f;
-            return Shader::Uranus;
-        case Shader::Uranus:
-            planet = "Mars";
-            hasMoon = false;
-            planetSize = 1.0f;
-            return Shader::Mars;
-        case Shader::Mars:
-            planet = "Kepler 186f";
-            hasMoon = false;
-            planetSize = 1.0f;
-            return Shader::Kepler186f;
-        default:
-            planet = "Earth";
-            hasMoon = true;
-            planetSize = 1.0f;
-            return Shader::Earth;
-    }
-}
-*/
+
 int main(int argc, char** argv) {
     if (!init()) {
         return 1;
