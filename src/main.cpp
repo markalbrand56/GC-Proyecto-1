@@ -12,7 +12,6 @@ Camera camera = setupInitialCamera();
 std::vector<Model> models;
 std::string planet;
 bool hasMoon = false;
-float planetSize = 1.0f;
 
 using namespace std;
 void render() {
@@ -120,7 +119,7 @@ std::vector<glm::vec3> setupVertexFromObject(const std::vector<Face>& faces, con
 
     return vertexBufferObject;
 }
-
+/*
 Shader getNextPlanetTexture(Shader currentTexture) {
     // Implementa la lógica para cambiar a la siguiente textura
     switch (currentTexture) {
@@ -156,7 +155,7 @@ Shader getNextPlanetTexture(Shader currentTexture) {
             return Shader::Earth;
     }
 }
-
+*/
 int main(int argc, char** argv) {
     if (!init()) {
         return 1;
@@ -192,28 +191,42 @@ int main(int argc, char** argv) {
 
     Uint32 frameStart, frameTime; // For calculating the frames per second
 
-    float rotationAnglePlanet = 0.0f; // Angle for the rotation of the planet
-    float rotationAngleMoon = 0.0f; // Angle for the rotation of the moon
+    // ##################################### Sun #####################################
+    Uniforms sunUniform = planetBaseUniform(camera);
+    float sunScale = 1.0f;
 
-    // Create Uniform for first planet
-    Uniforms planetUniform1 = planetBaseUniform(camera);
+    glm::vec3 sunTranslationVector(0.0f, 0.0f, 0.0f);  // Move the model to the center of the world
+    glm::vec3 sunRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 sunScaleFactor(sunScale, sunScale, sunScale);  // Scale of the model
 
-    glm::vec3 modelTranslationVector(0.0f, 0.0f, 0.0f);  // Move the model to the center of the world
-    glm::vec3 modelRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
-    glm::vec3 planetScaleFactor(1.0f, 1.0f, 1.0f);  // Scale the model to 1/10th of its original size
+    // Create model
+    Model sunModel;
+    sunModel.vertices = planetVBO;
+    sunModel.uniforms = sunUniform;
+    sunModel.shader = Shader::Sun;
+
+    // ##################################### Earth #####################################
+    Uniforms earthUniform = planetBaseUniform(camera);
+    float earthScale = 0.4f;
+
+    glm::vec3 earthRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 earthScaleFactor(earthScale, earthScale, earthScale);  // Scale of the model
+
+    // Create model
+    Model earthModel;
+    earthModel.vertices = planetVBO;
+    earthModel.uniforms = earthUniform;
+    earthModel.shader = Shader::Earth;
+
+    // ##################################### Moon #####################################
 
     // Create Uniform for moon
     Uniforms moonUniform = moonBaseUniform(camera);
+    float moonScale = 0.2f;
 
-    glm::vec3 moonScaleFactor(0.27f, 0.27f, 0.27f);
+    glm::vec3 moonScaleFactor(moonScale, moonScale, moonScale);
 
     // Create model
-    Model planetModel;
-    planetModel.vertices = planetVBO;
-    planetModel.uniforms = planetUniform1;
-    planetModel.shader = Shader::Earth;
-    hasMoon = true;
-
     Model moonModel;
     moonModel.vertices = moonVBO;
     moonModel.uniforms = moonUniform;
@@ -221,10 +234,20 @@ int main(int argc, char** argv) {
 
     cout << "Starting loop" << endl;
 
-    float speed = 5.0f;
     bool running = true;
+
+    float rotationSpeedSun = 0.5f;
+    float rotationAngleSun = 0.2f;
+
+    float earthOrbitAngle = 0.0f;
+    float earthDistanceToSun = 2.5f;
+    float rotationSpeedEarth = 1.5f;
+    float rotationAngleEarth = 0.0f;
+
     float moonOrbitAngle = 0.0f;
     float distanceToPlanet = 1.0f;
+    float rotationSpeedMoon = 1.0f;
+    float rotationAngleMoon = 0.0f;
 
     while (running) {
         frameStart = SDL_GetTicks();
@@ -235,28 +258,50 @@ int main(int argc, char** argv) {
             }
 
             if (event.type == SDL_KEYDOWN) {
+                float increment = 0.1f;
                 switch (event.key.keysym.sym) {
                     case SDLK_LEFT:
-                        speed += -1.0f;
+                        rotationSpeedSun -= increment;
+                        rotationSpeedEarth -= increment;
+                        rotationSpeedMoon -= increment;
+
                         break;
                     case SDLK_RIGHT:
-                        speed += 1.0f;
+                        rotationSpeedSun += increment;
+                        rotationSpeedEarth += increment;
+                        rotationSpeedMoon += increment;
+
                         break;
                     case SDLK_SPACE:
-                        planetModel.shader = getNextPlanetTexture(planetModel.shader);
+//                        sunModel.shader = getNextPlanetTexture(sunModel.shader);
                         break;
                 }
             }
         }
 
-        rotationAnglePlanet += (speed / planetSize);
-        rotationAngleMoon += (speed / planetSize) * 1.5f;
+        rotationAngleSun += rotationSpeedSun;
+        rotationAngleEarth += rotationSpeedEarth;
 
-        // First planet
-        planetUniform1.model = createModelMatrix(modelTranslationVector, planetScaleFactor * planetSize, modelRotationAxis, rotationAnglePlanet);
-        planetModel.modelMatrix = planetUniform1.model;
+        // ##################################### Sun #####################################
+        sunUniform.model = createModelMatrix(sunTranslationVector, sunScaleFactor, sunRotationAxis, rotationAngleSun);
+        sunModel.modelMatrix = sunUniform.model;
 
-        // Moon
+        models.push_back(sunModel);
+
+        // ##################################### Earth #####################################
+        // move the planet around the sun on the x and y axis
+        earthOrbitAngle += 1.0f;
+        glm::vec3 earthTranslationVector(
+                earthDistanceToSun * cos(glm::radians(earthOrbitAngle)),
+                0.0f,
+                earthDistanceToSun * sin(glm::radians(earthOrbitAngle))
+        );
+        earthUniform.model = createModelMatrix(earthTranslationVector, earthScaleFactor, earthRotationAxis, rotationAngleEarth);
+        earthModel.modelMatrix = earthUniform.model;
+
+        models.push_back(earthModel);
+
+        // ##################################### Moon #####################################
         // move the moon around the planet on the x and y axis
         moonOrbitAngle += 2.0f;
         glm::vec3 translationVectorMoon(
@@ -264,10 +309,8 @@ int main(int argc, char** argv) {
                 0.0f,
                 distanceToPlanet * sin(glm::radians(moonOrbitAngle))
         );
-        moonUniform.model = createModelMatrix(translationVectorMoon, moonScaleFactor, modelRotationAxis, rotationAngleMoon);
+        moonUniform.model = createModelMatrix(translationVectorMoon, moonScaleFactor, sunRotationAxis, rotationAngleMoon);
         moonModel.modelMatrix = moonUniform.model;
-
-        models.push_back(planetModel);
 
         if (hasMoon){
             models.push_back(moonModel);
