@@ -173,6 +173,12 @@ int main(int argc, char** argv) {
     std::vector<glm::vec3> moonNormals;
     std::vector<glm::vec3> moonTexCoords;
 
+    // Ship
+    std::vector<glm::vec3> shipVertices;
+    std::vector<Face> shipFaces;
+    std::vector<glm::vec3> shipNormals;
+    std::vector<glm::vec3> shipTexCoords;
+
     // Load the OBJ file
     bool success = loadOBJ("../model/sphere.obj", planetVertices, planetFaces, planetNormals, planetTexCoords);
     if (!success) {
@@ -184,12 +190,32 @@ int main(int argc, char** argv) {
         std::cerr << "Error loading OBJ file!" << std::endl;
         return 1;
     }
+    success = loadOBJ("../model/quinjet.obj", shipVertices, shipFaces, shipNormals, shipTexCoords);
+    if (!success) {
+        std::cerr << "Error loading OBJ file!" << std::endl;
+        return 1;
+    }
 
     // Process the OBJ file into rotationAnglePlanet VBO
     std::vector<glm::vec3> planetVBO = setupVertexFromObject(planetFaces, planetVertices, planetNormals, planetTexCoords);
     std::vector<glm::vec3> moonVBO = setupVertexFromObject(moonFaces, moonVertices, moonNormals, moonTexCoords);
+    std::vector<glm::vec3> shipVBO = setupVertexFromObject(shipFaces, shipVertices, shipNormals, shipTexCoords);
 
     Uint32 frameStart, frameTime; // For calculating the frames per second
+
+    // ##################################### Ship #####################################
+    Uniforms shipUniform = planetBaseUniform(camera);
+    float shipScale = 0.1f;
+
+    glm::vec3 shipTranslationVector(0.0f, 0.0f, 1.0f);
+    glm::vec3 shipRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 shipScaleFactor(shipScale, shipScale, shipScale);  // Scale of the model
+
+    // Create model
+    Model shipModel;
+    shipModel.vertices = shipVBO;
+    shipModel.uniforms = shipUniform;
+    shipModel.shader = Shader::Noise;
 
     // ##################################### Sun #####################################
     Uniforms sunUniform = planetBaseUniform(camera);
@@ -281,6 +307,12 @@ int main(int argc, char** argv) {
 
         rotationAngleSun += rotationSpeedSun;
         rotationAngleEarth += rotationSpeedEarth;
+
+        // ##################################### Ship #####################################
+        shipUniform.model = createShipModelMatrix(shipTranslationVector, shipScaleFactor, shipRotationAxis, rotationAngleSun);
+        shipModel.modelMatrix = shipUniform.model;
+
+        models.push_back(shipModel);
 
         // ##################################### Sun #####################################
         sunUniform.model = createModelMatrix(sunTranslationVector, sunScaleFactor, sunRotationAxis, rotationAngleSun);
