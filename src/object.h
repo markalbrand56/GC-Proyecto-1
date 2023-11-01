@@ -14,6 +14,7 @@ enum class Shader {
     Mars,
     Kepler186f,
     Noise,
+    Ship,
 };
 
 class Model {

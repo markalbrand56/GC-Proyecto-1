@@ -382,3 +382,14 @@ Fragment noiseFragmentShader(Fragment& fragment) {
 
     return fragment;
 }
+
+Fragment shipFragmentShader(Fragment& fragment) {
+    Color color;
+
+    // just paint all the ship with white for now
+    color = Color(1.0f, 1.0f, 1.0f);
+
+    fragment.color = color * fragment.intensity;
+
+    return fragment;
+}

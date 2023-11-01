@@ -10,18 +10,19 @@ struct Uniforms {
     glm::mat4 viewport;
 };
 
-glm::mat4 createShipModelMatrix(glm::vec3 translationVector, glm::vec3 scaleVector, glm::vec3 rotationVector, float angle) {
-    // Primero ajustar la nave
+glm::mat4 createShipModelMatrix(glm::vec3 translationVector, glm::vec3 scaleVector) {
+    // ajustar la nave en z
     glm::vec3 rotationVectorX = glm::vec3(0, 0, 1);
 
     glm::mat4 translate = glm::translate(glm::mat4(1), translationVector);
     glm::mat4 scale = glm::scale(glm::mat4(1), scaleVector);
     glm::mat4 rotation = glm::rotate(glm::mat4(1), glm::radians(180.0f), rotationVectorX);
 
-    // Luego rotarla
-    glm::mat4 rotation2 = glm::rotate(glm::mat4(1), glm::radians(angle), rotationVector);
+    // ajustar la nave en y
+    glm::vec3 rotationVectorY = glm::vec3(0, 1, 0);
+    glm::mat4 rotationY = glm::rotate(glm::mat4(1), glm::radians(-90.0f), rotationVectorY);
 
-    return translate * rotation * scale * rotation2;
+    return translate * scale * rotation * rotationY;
 }
 
 glm::mat4 createModelMatrix(glm::vec3 translationVector, glm::vec3 scaleVector, glm::vec3 rotationVector, float angle)  {

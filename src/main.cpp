@@ -86,6 +86,9 @@ void render() {
                 case Shader::Noise:
                     point(noiseFragmentShader(fragment));
                     break;
+                case Shader::Ship:
+                    point(shipFragmentShader(fragment));
+                    break;
                 default:
                     point(fragmentShader(fragment));
                     break;
@@ -207,7 +210,7 @@ int main(int argc, char** argv) {
     Uniforms shipUniform = planetBaseUniform(camera);
     float shipScale = 0.1f;
 
-    glm::vec3 shipTranslationVector(0.0f, 0.0f, 1.0f);
+    glm::vec3 shipTranslationVector(0.0f, 0.4f, 3.0f);
     glm::vec3 shipRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
     glm::vec3 shipScaleFactor(shipScale, shipScale, shipScale);  // Scale of the model
 
@@ -215,7 +218,7 @@ int main(int argc, char** argv) {
     Model shipModel;
     shipModel.vertices = shipVBO;
     shipModel.uniforms = shipUniform;
-    shipModel.shader = Shader::Noise;
+    shipModel.shader = Shader::Ship;
 
     // ##################################### Sun #####################################
     Uniforms sunUniform = planetBaseUniform(camera);
@@ -309,7 +312,7 @@ int main(int argc, char** argv) {
         rotationAngleEarth += rotationSpeedEarth;
 
         // ##################################### Ship #####################################
-        shipUniform.model = createShipModelMatrix(shipTranslationVector, shipScaleFactor, shipRotationAxis, rotationAngleSun);
+        shipUniform.model = createShipModelMatrix(shipTranslationVector, shipScaleFactor);
         shipModel.modelMatrix = shipUniform.model;
 
         models.push_back(shipModel);
