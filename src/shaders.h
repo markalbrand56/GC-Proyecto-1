@@ -85,7 +85,7 @@ Fragment sunFragmentShader(Fragment& fragment) {
     float oy = 3000.0f;
     float z = 3000.0f;
 
-    float noiseValue = noiseGenerator.GetNoise((uv.x + ox) * z, (uv.y + oy) * z);
+    float noiseValue = noiseGenerator.GetNoise((uv.x + ox) * z, (uv.y + oy) * z, fragment.originalPos.z);
 
     glm::vec3 tempColor;
 

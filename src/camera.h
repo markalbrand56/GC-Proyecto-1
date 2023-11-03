@@ -27,3 +27,107 @@ Camera setupInitialCamera() {
     camera.upVector = glm::vec3(0.0f, 1.0f, 0.0f);
     return camera;
 }
+
+/*
+ * CAMERA MOVEMENTS
+ *
+ * Si la camara se mueve para arriba, la camara debe mantenerse a la misma distancia del target, por lo que deben compensarse (con trigonometria) los movimientos en x y z.
+ *
+ * */
+
+float cameraMoveAngle = 5.0f;
+
+Camera moveUp(Camera camera) {
+    // Si se llama esta funcion, la cámara va a rotar hacia arriba
+    // esto significa que la camara se va a mover en el eje y y en el eje z, manteniendo la misma distancia hacia el target
+
+    // calcular el ángulo de rotacion
+    float angle = glm::radians(cameraMoveAngle);
+
+    // obtener el ángulo actual entre y y z
+    float currentAngle = glm::atan(camera.cameraPosition.y, camera.cameraPosition.z);
+
+    angle = currentAngle - angle;
+
+    // calcular el desplazamiento en y y en z
+    float y = glm::sin(angle) * glm::length(camera.cameraPosition);
+    float z = glm::cos(angle) * glm::length(camera.cameraPosition);
+
+    // actualizar la posicion de la camara
+    camera.cameraPosition.y = y;
+    camera.cameraPosition.z = z;
+
+    return camera;
+}
+
+Camera moveDown(Camera camera) {
+    // Si se llama esta funcion, la cámara va a rotar hacia arriba
+    // esto significa que la camara se va a mover en el eje y y en el eje z, manteniendo la misma distancia hacia el target
+
+    // calcular el ángulo de rotacion
+    float angle = glm::radians(cameraMoveAngle);
+
+    // obtener el ángulo actual entre y y z
+    float currentAngle = glm::atan(camera.cameraPosition.y, camera.cameraPosition.z);
+
+    angle += currentAngle;
+
+    // calcular el desplazamiento en y y en z
+    float y = glm::sin(angle) * glm::length(camera.cameraPosition);
+    float z = glm::cos(angle) * glm::length(camera.cameraPosition);
+
+    // actualizar la posicion de la camara
+    camera.cameraPosition.y = y;
+    camera.cameraPosition.z = z;
+
+    return camera;
+}
+
+Camera moveLeft(Camera camera) {
+    // Si se llama esta funcion, la cámara va a rotar hacia arriba
+    // esto significa que la camara se va a mover en el eje x y en el eje z, manteniendo la misma distancia hacia el target
+
+    // calcular el ángulo de rotacion
+    float angle = glm::radians(cameraMoveAngle);
+
+    // obtener el ángulo actual entre x y z
+    float currentAngle = glm::atan(camera.cameraPosition.x, camera.cameraPosition.z);
+
+    angle = currentAngle - angle;
+
+    // calcular el desplazamiento en x y en z
+    float x = glm::sin(angle) * glm::length(camera.cameraPosition);
+    float z = glm::cos(angle) * glm::length(camera.cameraPosition);
+
+    // actualizar la posicion de la camara
+    camera.cameraPosition.x = x;
+    camera.cameraPosition.z = z;
+
+    return camera;
+}
+
+Camera moveRight(Camera camera) {
+    // Si se llama esta funcion, la cámara va a rotar hacia arriba
+    // esto significa que la camara se va a mover en el eje x y en el eje z, manteniendo la misma distancia hacia el target
+
+    // calcular el ángulo de rotacion
+    float angle = glm::radians(cameraMoveAngle);
+
+    // obtener el ángulo actual entre x y z
+    float currentAngle = glm::atan(camera.cameraPosition.x, camera.cameraPosition.z);
+
+    angle += currentAngle;
+
+    // calcular el desplazamiento en x y en z
+    float x = glm::sin(angle) * glm::length(camera.cameraPosition);
+    float z = glm::cos(angle) * glm::length(camera.cameraPosition);
+
+    // actualizar la posicion de la camara
+    camera.cameraPosition.x = x;
+    camera.cameraPosition.z = z;
+
+    return camera;
+}
+
+
+

@@ -261,6 +261,33 @@ int main(int argc, char** argv) {
             if (event.type == SDL_KEYDOWN) {
                 float increment = 0.1f;
                 switch (event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        running = false;
+                        break;
+                    case SDLK_w:
+                        std::cout << "w" << std::endl;
+                        camera = moveUp(camera);
+                        break;
+                    case SDLK_s:
+                        std::cout << "s" << std::endl;
+                        camera = moveDown(camera);
+                        break;
+                    case SDLK_a:
+                        std::cout << "a" << std::endl;
+                        camera = moveLeft(camera);
+                        break;
+                    case SDLK_d:
+                        std::cout << "d" << std::endl;
+                        camera = moveRight(camera);
+                        break;
+                    case SDLK_UP:
+                        std::cout << "up" << std::endl;
+                        camera = zoomIn(camera);
+                        break;
+                    case SDLK_DOWN:
+                        std::cout << "down" << std::endl;
+                        camera = zoomOut(camera);
+                        break;
                     case SDLK_LEFT:
                         rotationSpeedSun -= increment;
                         rotationSpeedEarth -= increment;

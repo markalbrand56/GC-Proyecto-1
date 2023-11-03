@@ -55,8 +55,12 @@ std::vector<Fragment> triangle(const Vertex& a, const Vertex& b, const Vertex& c
             // glm::vec3 normal = a.normal; // assume flatness
             float intensity = glm::dot(normal, L);
 
-            if (intensity < 0)
-                continue;
+            float manualIntensityClamp = 0.07f;
+
+            if (intensity < manualIntensityClamp){
+                intensity = manualIntensityClamp;
+
+            }
 
             Color color = Color(255, 255, 255);
 
@@ -75,4 +79,23 @@ std::vector<Fragment> triangle(const Vertex& a, const Vertex& b, const Vertex& c
         }
     }
     return fragments;
+}
+
+Camera zoomIn(Camera camera) {
+    // prevent zooming in too much
+    if (camera.cameraPosition.z <= 3.6f)
+        return camera;
+
+    // print z
+     std::cout << "camera position z: " << camera.cameraPosition.z << std::endl;
+    camera.cameraPosition.z -= 0.1f;
+    return camera;
+}
+
+Camera zoomOut(Camera camera) {
+    // prevent zooming out too much
+    if (camera.cameraPosition.z >= 15.0f)
+        return camera;
+    camera.cameraPosition.z += 0.1f;
+    return camera;
 }
