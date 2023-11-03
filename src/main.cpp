@@ -268,26 +268,38 @@ int main(int argc, char** argv) {
                     case SDLK_w:
                         std::cout << "w" << std::endl;
                         camera = moveUp(camera);
+                        shipTranslationVector = moveShipUp(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_s:
                         std::cout << "s" << std::endl;
                         camera = moveDown(camera);
+                        shipTranslationVector = moveShipDown(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_a:
                         std::cout << "a" << std::endl;
                         camera = moveLeft(camera);
+                        shipTranslationVector = moveShipLeft(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_d:
                         std::cout << "d" << std::endl;
                         camera = moveRight(camera);
+                        shipTranslationVector = moveShipRight(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_UP:
                         std::cout << "up" << std::endl;
                         camera = zoomIn(camera);
+                        shipTranslationVector = zoomInShip(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_DOWN:
                         std::cout << "down" << std::endl;
                         camera = zoomOut(camera);
+                        shipTranslationVector = zoomOutShip(shipTranslationVector);
+                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_LEFT:
                         rotationSpeedSun -= increment;
