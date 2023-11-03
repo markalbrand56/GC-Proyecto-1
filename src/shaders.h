@@ -11,10 +11,13 @@
 #include <cmath>
 #include <random>
 
+
 const glm::vec3 white = glm::vec3(1.0f, 1.0f, 1.0f);  // 1, 1, 1: White
 const glm::vec3 black = glm::vec3(0.0f, 0.0f, 0.0f);  // 0, 0, 0: Black
 
 Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms) {
+    // genera codigo para imprimir toda una matriz de glm::mat4
+
     // Apply transformations to the input vertex using the matrices from the uniforms
     glm::vec4 clipSpaceVertex = uniforms.projection * uniforms.view * uniforms.model * glm::vec4(vertex.position, 1.0f);
 

@@ -123,6 +123,14 @@ std::vector<glm::vec3> setupVertexFromObject(const std::vector<Face>& faces, con
     return vertexBufferObject;
 }
 
+std::vector<Model> updateCamera(std::vector<Model>& modelsToUpdate, Camera newCamera) {
+    for (auto& model : modelsToUpdate) {
+        model.uniforms.view = createViewMatrix(newCamera);
+    }
+
+    return modelsToUpdate;
+}
+
 int main(int argc, char** argv) {
     if (!init()) {
         return 1;
@@ -272,6 +280,15 @@ int main(int argc, char** argv) {
             }
         }
 
+        // Camera update
+
+//        camera.targetPosition = camera.targetPosition + glm::vec3{0.0f, 0.0f, 0.1f};
+//        std::cout << camera.targetPosition.z << std::endl;
+//        camera.cameraPosition = camera.cameraPosition + glm::vec3{0.0f, 0.1f, 0.0f};
+//        std::cout << camera.cameraPosition.z << std::endl;
+
+        // Rotations
+
         rotationAngleSun += rotationSpeedSun;
         rotationAngleEarth += rotationSpeedEarth;
 
@@ -318,6 +335,17 @@ int main(int argc, char** argv) {
         clear();
 
         // Render
+        models = updateCamera(models, camera);
+
+//        for (auto model : models) {
+//            for (int i = 0; i < 4; ++i) {
+//                for (int j = 0; j < 4; ++j) {
+//                    std::cout << model.uniforms.view[i][j] << " ";
+//                }
+//                std::cout << std::endl;
+//            }
+//        }
+
         render();
 
         models.clear();

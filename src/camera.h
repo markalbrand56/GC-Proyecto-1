@@ -12,6 +12,11 @@ struct Camera {
 
 
 glm::mat4 createViewMatrix(const Camera& camera) {
+    // print target position
+//     std::cout << "target position: " << camera.targetPosition.x << ", " << camera.targetPosition.y << ", " << camera.targetPosition.z << std::endl;
+
+    // print camera position
+//     std::cout << "camera position: " << camera.cameraPosition.x << ", " << camera.cameraPosition.y << ", " << camera.cameraPosition.z << std::endl;
     return glm::lookAt(camera.cameraPosition, camera.targetPosition, camera.upVector);
 }
 
