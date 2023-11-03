@@ -129,5 +129,26 @@ Camera moveRight(Camera camera) {
     return camera;
 }
 
+Camera zoomIn(Camera camera) {
+    // prevent zooming in too much
+    // si la tangente del ángulo entre y y z es mayor a 1, significa que la camara se está acercando demasiado al target
+    float distance = glm::length(camera.cameraPosition);
+    std::cout << "camera position z: " << distance << std::endl;
+    if (distance <= 3.6f)
+        return camera;
+
+    // print z
+    camera.cameraPosition.z -= 0.1f;
+    return camera;
+}
+
+Camera zoomOut(Camera camera) {
+    // prevent zooming out too much
+    if (camera.cameraPosition.z >= 15.0f)
+        return camera;
+    camera.cameraPosition.z += 0.1f;
+    return camera;
+}
+
 
 

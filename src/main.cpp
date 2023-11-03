@@ -236,6 +236,7 @@ int main(int argc, char** argv) {
     cout << "Starting loop" << endl;
 
     bool running = true;
+    bool orbiting = true;
 
     float rotationSpeedSun = 0.5f;
     float rotationAngleSun = 0.2f;
@@ -301,23 +302,21 @@ int main(int argc, char** argv) {
 
                         break;
                     case SDLK_SPACE:
-//                        sunModel.shader = getNextPlanetTexture(sunModel.shader);
+                        orbiting = !orbiting;
                         break;
                 }
             }
         }
 
-        // Camera update
-
-//        camera.targetPosition = camera.targetPosition + glm::vec3{0.0f, 0.0f, 0.1f};
-//        std::cout << camera.targetPosition.z << std::endl;
-//        camera.cameraPosition = camera.cameraPosition + glm::vec3{0.0f, 0.1f, 0.0f};
-//        std::cout << camera.cameraPosition.z << std::endl;
-
-        // Rotations
+        // ##################################### Rotations #####################################
 
         rotationAngleSun += rotationSpeedSun;
         rotationAngleEarth += rotationSpeedEarth;
+
+        // ##################################### Orbits #####################################
+        if(orbiting) {
+            earthOrbitAngle += 1.0f;
+        }
 
         // ##################################### Ship #####################################
         shipUniform.model = createShipModelMatrix(shipTranslationVector, shipScaleFactor);
@@ -333,7 +332,7 @@ int main(int argc, char** argv) {
 
         // ##################################### Earth #####################################
         // move the planet around the sun on the x and y axis
-        earthOrbitAngle += 1.0f;
+
         glm::vec3 earthTranslationVector(
                 earthDistanceToSun * cos(glm::radians(earthOrbitAngle)),
                 0.0f,
@@ -346,32 +345,12 @@ int main(int argc, char** argv) {
 
         // ##################################### Moon #####################################
         // move the moon around the planet on the x and y axis
-        moonOrbitAngle += 2.0f;
-        glm::vec3 translationVectorMoon(
-                distanceToPlanet * cos(glm::radians(moonOrbitAngle)),
-                0.0f,
-                distanceToPlanet * sin(glm::radians(moonOrbitAngle))
-        );
-        moonUniform.model = createModelMatrix(translationVectorMoon, moonScaleFactor, sunRotationAxis, rotationAngleMoon);
-        moonModel.modelMatrix = moonUniform.model;
 
-        if (hasMoon){
-            models.push_back(moonModel);
-        }
 
         clear();
 
-        // Render
+        // ##################################### Render #####################################
         models = updateCamera(models, camera);
-
-//        for (auto model : models) {
-//            for (int i = 0; i < 4; ++i) {
-//                for (int j = 0; j < 4; ++j) {
-//                    std::cout << model.uniforms.view[i][j] << " ";
-//                }
-//                std::cout << std::endl;
-//            }
-//        }
 
         render();
 

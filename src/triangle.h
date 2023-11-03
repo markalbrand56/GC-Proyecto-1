@@ -80,22 +80,3 @@ std::vector<Fragment> triangle(const Vertex& a, const Vertex& b, const Vertex& c
     }
     return fragments;
 }
-
-Camera zoomIn(Camera camera) {
-    // prevent zooming in too much
-    if (camera.cameraPosition.z <= 3.6f)
-        return camera;
-
-    // print z
-     std::cout << "camera position z: " << camera.cameraPosition.z << std::endl;
-    camera.cameraPosition.z -= 0.1f;
-    return camera;
-}
-
-Camera zoomOut(Camera camera) {
-    // prevent zooming out too much
-    if (camera.cameraPosition.z >= 15.0f)
-        return camera;
-    camera.cameraPosition.z += 0.1f;
-    return camera;
-}
