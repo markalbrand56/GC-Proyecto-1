@@ -14,3 +14,45 @@
 - [ ] 20 puntos por renderizar las orbitas de los planetas
 
 ## Detalles
+
+### Modelos utilizados
+#### Estrellas: 1
+- Sol
+
+![Sun](https://github.com/markalbrand56/GC-Laboratorio-4/blob/master/img/Sun.png)
+
+#### Planetas: 4
+- Tierra
+
+![Earth](https://github.com/markalbrand56/GC-Laboratorio-4/blob/master/img/Earth.png)
+
+- Marte
+
+![Mars](https://github.com/markalbrand56/GC-Laboratorio-4/blob/master/img/Mars.png)
+
+- Jupiter
+
+![Jupiter](https://github.com/markalbrand56/GC-Laboratorio-4/blob/master/img/Jupiter.png)
+
+- Urano
+
+![Uranus](https://github.com/markalbrand56/GC-Laboratorio-4/blob/master/img/Uranus.png)
+
+#### Naves: 1
+- Nave creada replicando un Quinjet de Marvel
+
+![Modelo base](https://github.com/markalbrand56/GC-Laboratorio-3/blob/master/model/quinjet_base.png)
+
+![Modelo final](https://github.com/markalbrand56/GC_Proyecto_1/blob/master/img/quinjet.png)
+
+### Controles
+- **W**: Mover cámara hacia arriba
+- **S**: Mover cámara hacia abajo
+- **A**: Mover cámara hacia la izquierda
+- **D**: Mover cámara hacia la derecha
+- **Flecha arriba**: Mover cámara hacia adelante
+- **Flecha abajo**: Mover cámara hacia atrás
+- **Flecha izquierda**: Aumentar velocidad de rotación
+- **Flecha derecha**: Disminuir velocidad de rotación
+- **Espacio**: Pausar movimiento de las órbitas
+- **ESC**: Salir del programa
