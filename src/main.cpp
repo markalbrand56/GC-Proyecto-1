@@ -238,12 +238,12 @@ int main(int argc, char** argv) {
     bool running = true;
     bool orbiting = true;
 
-    float rotationSpeedSun = 0.5f;
+    float rotationSpeedPlanets = 1.0f;
+
     float rotationAngleSun = 0.2f;
 
     float earthOrbitAngle = 0.0f;
-    float earthDistanceToSun = 2.5f;
-    float rotationSpeedEarth = 1.5f;
+    float earthDistanceToSun = 3.5f;
     float rotationAngleEarth = 0.0f;
 
     float moonOrbitAngle = 0.0f;
@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
             }
 
             if (event.type == SDL_KEYDOWN) {
-                float increment = 0.1f;
+                float increment = 0.5f;
                 switch (event.key.keysym.sym) {
                     case SDLK_ESCAPE:
                         running = false;
@@ -268,49 +268,33 @@ int main(int argc, char** argv) {
                     case SDLK_w:
                         std::cout << "w" << std::endl;
                         camera = moveUp(camera);
-                        shipTranslationVector = moveShipUp(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_s:
                         std::cout << "s" << std::endl;
                         camera = moveDown(camera);
-                        shipTranslationVector = moveShipDown(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_a:
                         std::cout << "a" << std::endl;
                         camera = moveLeft(camera);
-                        shipTranslationVector = moveShipLeft(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_d:
                         std::cout << "d" << std::endl;
                         camera = moveRight(camera);
-                        shipTranslationVector = moveShipRight(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_UP:
                         std::cout << "up" << std::endl;
                         camera = zoomIn(camera);
-                        shipTranslationVector = zoomInShip(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_DOWN:
                         std::cout << "down" << std::endl;
                         camera = zoomOut(camera);
-                        shipTranslationVector = zoomOutShip(shipTranslationVector);
-                        std::cout << "ship position: " << shipTranslationVector.x << ", " << shipTranslationVector.y << ", " << shipTranslationVector.z << std::endl;
                         break;
                     case SDLK_LEFT:
-                        rotationSpeedSun -= increment;
-                        rotationSpeedEarth -= increment;
-                        rotationSpeedMoon -= increment;
+                        rotationSpeedPlanets -= increment;
 
                         break;
                     case SDLK_RIGHT:
-                        rotationSpeedSun += increment;
-                        rotationSpeedEarth += increment;
-                        rotationSpeedMoon += increment;
+                        rotationSpeedPlanets += increment;
 
                         break;
                     case SDLK_SPACE:
@@ -322,8 +306,8 @@ int main(int argc, char** argv) {
 
         // ##################################### Rotations #####################################
 
-        rotationAngleSun += rotationSpeedSun;
-        rotationAngleEarth += rotationSpeedEarth;
+        rotationAngleSun += rotationSpeedPlanets * 0.2f;
+        rotationAngleEarth += rotationSpeedPlanets * 0.8f;
 
         // ##################################### Orbits #####################################
         if(orbiting) {
@@ -334,7 +318,6 @@ int main(int argc, char** argv) {
         shipUniform.model = createShipModelMatrix(shipTranslationVector, shipScaleFactor);
         shipModel.modelMatrix = shipUniform.model;
 
-        models.push_back(shipModel);
 
         // ##################################### Sun #####################################
         sunUniform.model = createModelMatrix(sunTranslationVector, sunScaleFactor, sunRotationAxis, rotationAngleSun);
@@ -363,6 +346,8 @@ int main(int argc, char** argv) {
 
         // ##################################### Render #####################################
         models = updateCamera(models, camera);
+        models.push_back(shipModel);
+
 
         render();
 
