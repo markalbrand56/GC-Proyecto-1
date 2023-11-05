@@ -59,4 +59,4 @@
 
 ### Video demostrativo
 
-![Video](https://github.com/markalbrand56/GC_Proyecto_1/blob/master/img/demo.mp4)
+[![Mira el video](https://img.youtube.com/vi/EilBj3OK79M/maxresdefault.jpg)](https://youtu.be/EilBj3OK79M)
