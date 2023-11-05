@@ -148,12 +148,6 @@ int main(int argc, char** argv) {
     std::vector<glm::vec3> planetNormals;
     std::vector<glm::vec3> planetTexCoords;
 
-    // Moon
-    std::vector<glm::vec3> moonVertices;
-    std::vector<Face> moonFaces;
-    std::vector<glm::vec3> moonNormals;
-    std::vector<glm::vec3> moonTexCoords;
-
     // Ship
     std::vector<glm::vec3> shipVertices;
     std::vector<Face> shipFaces;
@@ -166,11 +160,6 @@ int main(int argc, char** argv) {
         std::cerr << "Error loading OBJ file!" << std::endl;
         return 1;
     }
-    success = loadOBJ("../model/sphere.obj", moonVertices, moonFaces, moonNormals, moonTexCoords);
-    if (!success) {
-        std::cerr << "Error loading OBJ file!" << std::endl;
-        return 1;
-    }
     success = loadOBJ("../model/quinjet.obj", shipVertices, shipFaces, shipNormals, shipTexCoords);
     if (!success) {
         std::cerr << "Error loading OBJ file!" << std::endl;
@@ -179,7 +168,6 @@ int main(int argc, char** argv) {
 
     // Process the OBJ file into rotationAnglePlanet VBO
     std::vector<glm::vec3> planetVBO = setupVertexFromObject(planetFaces, planetVertices, planetNormals, planetTexCoords);
-    std::vector<glm::vec3> moonVBO = setupVertexFromObject(moonFaces, moonVertices, moonNormals, moonTexCoords);
     std::vector<glm::vec3> shipVBO = setupVertexFromObject(shipFaces, shipVertices, shipNormals, shipTexCoords);
 
     Uint32 frameStart, frameTime; // For calculating the frames per second
@@ -188,7 +176,7 @@ int main(int argc, char** argv) {
     Uniforms shipUniform = planetBaseUniform(camera);
     float shipScale = 0.1f;
 
-    glm::vec3 shipTranslationVector(0.0f, 0.4f, 3.0f);
+    glm::vec3 shipTranslationVector(0.0f, 0.4f, 13.5f);
     glm::vec3 shipRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
     glm::vec3 shipScaleFactor(shipScale, shipScale, shipScale);  // Scale of the model
 
@@ -214,7 +202,7 @@ int main(int argc, char** argv) {
 
     // ##################################### Earth #####################################
     Uniforms earthUniform = planetBaseUniform(camera);
-    float earthScale = 0.4f;
+    float earthScale = 0.3f;
 
     glm::vec3 earthRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
     glm::vec3 earthScaleFactor(earthScale, earthScale, earthScale);  // Scale of the model
@@ -225,26 +213,54 @@ int main(int argc, char** argv) {
     earthModel.uniforms = earthUniform;
     earthModel.shader = Shader::Earth;
 
-    // ##################################### Moon #####################################
+    // ##################################### Jupiter #####################################
+    Uniforms jupiterUniform = planetBaseUniform(camera);
+    float jupiterScale = 0.7f;
 
-    // Create Uniform for moon
-    Uniforms moonUniform = moonBaseUniform(camera);
-    float moonScale = 0.2f;
-
-    glm::vec3 moonScaleFactor(moonScale, moonScale, moonScale);
+    glm::vec3 jupiterRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 jupiterScaleFactor(jupiterScale, jupiterScale, jupiterScale);  // Scale of the model
 
     // Create model
-    Model moonModel;
-    moonModel.vertices = moonVBO;
-    moonModel.uniforms = moonUniform;
-    moonModel.shader = Shader::Moon;
+    Model jupiterModel;
+    jupiterModel.vertices = planetVBO;
+    jupiterModel.uniforms = jupiterUniform;
+    jupiterModel.shader = Shader::Jupiter;
+
+    // ##################################### Uranus #####################################
+    Uniforms uranusUniform = planetBaseUniform(camera);
+    float uranusScale = 0.5f;
+
+    glm::vec3 uranusRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 uranusScaleFactor(uranusScale, uranusScale, uranusScale);  // Scale of the model
+
+    // Create model
+    Model uranusModel;
+    uranusModel.vertices = planetVBO;
+    uranusModel.uniforms = uranusUniform;
+    uranusModel.shader = Shader::Uranus;
+
+    // ##################################### Mars #####################################
+    Uniforms marsUniform = planetBaseUniform(camera);
+    float marsScale = 0.4f;
+
+    glm::vec3 marsRotationAxis(0.0f, 1.0f, 0.0f); // Rotate around the Y-axis every model
+    glm::vec3 marsScaleFactor(marsScale, marsScale, marsScale);  // Scale of the model
+
+    // Create model
+    Model marsModel;
+    marsModel.vertices = planetVBO;
+    marsModel.uniforms = marsUniform;
+    marsModel.shader = Shader::Mars;
+
+
 
     cout << "Starting loop" << endl;
 
     bool running = true;
     bool orbiting = true;
 
-    float rotationSpeedPlanets = 1.0f;
+    float rotationSpeedPlanets = 1.0f;  // Base speed of the planets
+    float orbitSpeedPlanets = 1.0f;  // Base speed of the planets
 
     float rotationAngleSun = 0.2f;
 
@@ -252,10 +268,17 @@ int main(int argc, char** argv) {
     float earthDistanceToSun = 3.5f;
     float rotationAngleEarth = 0.0f;
 
-    float moonOrbitAngle = 0.0f;
-    float distanceToPlanet = 1.0f;
-    float rotationSpeedMoon = 1.0f;
-    float rotationAngleMoon = 0.0f;
+    float marsOrbitAngle = 0.0f;
+    float marsDistanceToSun = 5.0f;
+    float rotationAngleMars = 0.0f;
+
+    float jupiterOrbitAngle = 0.0f;
+    float jupiterDistanceToSun = 6.5f;
+    float rotationAngleJupiter = 0.0f;
+
+    float uranusOrbitAngle = 0.0f;
+    float uranusDistanceToSun = 8.0f;
+    float rotationAngleUranus = 0.0f;
 
     while (running) {
         frameStart = SDL_GetTicks();
@@ -303,10 +326,12 @@ int main(int argc, char** argv) {
                         break;
                     case SDLK_LEFT:
                         rotationSpeedPlanets -= increment;
+                        orbitSpeedPlanets -= increment;
 
                         break;
                     case SDLK_RIGHT:
                         rotationSpeedPlanets += increment;
+                        orbitSpeedPlanets += increment;
 
                         break;
                     case SDLK_SPACE:
@@ -320,10 +345,16 @@ int main(int argc, char** argv) {
 
         rotationAngleSun += rotationSpeedPlanets * 0.2f;
         rotationAngleEarth += rotationSpeedPlanets * 0.8f;
+        rotationAngleMars += rotationSpeedPlanets * 0.6f;
+        rotationAngleJupiter += rotationSpeedPlanets * 0.4f;
+        rotationAngleUranus += rotationSpeedPlanets * 0.3f;
 
         // ##################################### Orbits #####################################
         if(orbiting) {
-            earthOrbitAngle += 1.0f;
+            earthOrbitAngle += 1.0f * orbitSpeedPlanets;
+            marsOrbitAngle += 0.8f * orbitSpeedPlanets;
+            jupiterOrbitAngle += 0.6f * orbitSpeedPlanets;
+            uranusOrbitAngle += 0.4f * orbitSpeedPlanets;
         }
 
         // ##################################### Ship #####################################
@@ -350,20 +381,57 @@ int main(int argc, char** argv) {
 
         models.push_back(earthModel);
 
-        // ##################################### Moon #####################################
-        // move the moon around the planet on the x and y axis
+        // ##################################### Mars #####################################
+        // move the planet around the sun on the x and y axis
 
+        glm::vec3 marsTranslationVector(
+                marsDistanceToSun * cos(glm::radians(marsOrbitAngle)),
+                0.0f,
+                marsDistanceToSun * sin(glm::radians(marsOrbitAngle))
+        );
+        marsUniform.model = createModelMatrix(marsTranslationVector, marsScaleFactor, marsRotationAxis, rotationAngleMars);
+        marsModel.modelMatrix = marsUniform.model;
 
-        clear();
+        models.push_back(marsModel);
+
+        // ##################################### Jupiter #####################################
+        // move the planet around the sun on the x and y axis
+
+        glm::vec3 jupiterTranslationVector(
+                jupiterDistanceToSun * cos(glm::radians(jupiterOrbitAngle)),
+                0.0f,
+                jupiterDistanceToSun * sin(glm::radians(jupiterOrbitAngle))
+        );
+        jupiterUniform.model = createModelMatrix(jupiterTranslationVector, jupiterScaleFactor, jupiterRotationAxis, rotationAngleJupiter);
+        jupiterModel.modelMatrix = jupiterUniform.model;
+
+        models.push_back(jupiterModel);
+
+        // ##################################### Uranus #####################################
+        // move the planet around the sun on the x and y axis
+
+        glm::vec3 uranusTranslationVector(
+                uranusDistanceToSun * cos(glm::radians(uranusOrbitAngle)),
+                0.0f,
+                uranusDistanceToSun * sin(glm::radians(uranusOrbitAngle))
+        );
+        uranusUniform.model = createModelMatrix(uranusTranslationVector, uranusScaleFactor, uranusRotationAxis, rotationAngleUranus);
+        uranusModel.modelMatrix = uranusUniform.model;
+
+        models.push_back(uranusModel);
+
 
         // ##################################### Render #####################################
-        models = updateCamera(models, camera);
-        models.push_back(shipModel);
+        clear();
 
+        models = updateCamera(models, camera);
+
+        models.push_back(shipModel);
 
         render();
 
         models.clear();
+
         // Present the frame buffer to the screen
         SDL_RenderPresent(renderer);
 

@@ -22,7 +22,7 @@ glm::mat4 createViewMatrix(const Camera& camera) {
 
 Camera setupInitialCamera() {
     Camera camera{};
-    camera.cameraPosition = glm::vec3(0.0f, 0.0f, 5.0f);
+    camera.cameraPosition = glm::vec3(0.0f, 0.0f, 15.0f);
     camera.targetPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     camera.upVector = glm::vec3(0.0f, 1.0f, 0.0f);
     return camera;
