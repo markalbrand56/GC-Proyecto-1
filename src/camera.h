@@ -164,16 +164,9 @@ Camera zoomIn(Camera camera) {
 
 Camera zoomOut(Camera camera) {
     // prevent zooming out too much
-    if (camera.cameraPosition.z >= 15.0f)
+    if (camera.cameraPosition.z >= 30.0f)
         return camera;
     camera.cameraPosition.z += 0.2f;
     return camera;
 }
 
-glm::vec3 zoomOutShip (glm::vec3& shipTranslationVector) {
-    // prevent zooming out too much
-    if (shipTranslationVector.z >= 15.0f)
-        return shipTranslationVector;
-    shipTranslationVector.z += 0.1f;
-    return shipTranslationVector;
-}
