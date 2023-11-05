@@ -56,3 +56,7 @@
 - **Flecha derecha**: Disminuir velocidad de rotación
 - **Espacio**: Pausar movimiento de las órbitas
 - **ESC**: Salir del programa
+
+### Video demostrativo
+
+![Video](https://github.com/markalbrand56/GC_Proyecto_1/blob/master/img/demo.mp4)
