@@ -131,6 +131,12 @@ std::vector<Model> updateCamera(std::vector<Model>& modelsToUpdate, Camera newCa
     return modelsToUpdate;
 }
 
+void printCamera(Camera camera) {
+    std::cout << "Camera position: " << camera.cameraPosition.x << ", " << camera.cameraPosition.y << ", " << camera.cameraPosition.z << std::endl;
+    std::cout << "Camera target: " << camera.targetPosition.x << ", " << camera.targetPosition.y << ", " << camera.targetPosition.z << std::endl;
+    std::cout << "Camera up: " << camera.upVector.x << ", " << camera.upVector.y << ", " << camera.upVector.z << std::endl;
+}
+
 int main(int argc, char** argv) {
     if (!init()) {
         return 1;
@@ -268,26 +274,32 @@ int main(int argc, char** argv) {
                     case SDLK_w:
                         std::cout << "w" << std::endl;
                         camera = moveUp(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_s:
                         std::cout << "s" << std::endl;
                         camera = moveDown(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_a:
                         std::cout << "a" << std::endl;
                         camera = moveLeft(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_d:
                         std::cout << "d" << std::endl;
                         camera = moveRight(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_UP:
                         std::cout << "up" << std::endl;
                         camera = zoomIn(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_DOWN:
                         std::cout << "down" << std::endl;
                         camera = zoomOut(camera);
+                        printCamera(camera);
                         break;
                     case SDLK_LEFT:
                         rotationSpeedPlanets -= increment;
